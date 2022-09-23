@@ -44,3 +44,53 @@ class TestLabMetaDataExtensionExampleRoundtrip(NWBH5IOMixin, TestCase):
     def getContainer(self, nwbfile):
         """Get the LabMetaDataExtensionExample object from the given NWBFile."""
         return nwbfile.get_lab_meta_data(self.lab_meta_data.name)
+
+
+class TestReadmeExample(TestCase):
+    """
+    Run the example that is show in the README
+    """
+
+    def setUp(self) -> None:
+        self.filename = 'testfile.nwb'
+
+    def tearDown(self) -> None:
+        import os
+        if os.path.exists(self.filename):
+            os.remove(self.filename)
+
+    def test_readme_script(self):
+        from pynwb.file import NWBFile, Subject
+        from ndx_labmetadata_example import LabMetaDataExtensionExample
+        from pynwb import NWBHDF5IO
+        from uuid import uuid4
+        from datetime import datetime
+
+        # create an example NWBFile
+        nwbfile = NWBFile(
+            session_description="test session description",
+            identifier=str(uuid4()),
+            session_start_time=datetime(1970, 1, 1),
+            subject=Subject(
+                age="P50D",
+                description="example mouse",
+                sex="F",
+                subject_id="test_id")
+        )
+
+        # create our custom lab metadata
+        lab_meta_data = LabMetaDataExtensionExample(tissue_preparation="Example tissue preparation")
+
+        # Add the test LabMetaDataExtensionExample to the NWBFile
+        nwbfile.add_lab_meta_data(lab_meta_data=lab_meta_data)
+
+        # Write the file to disk
+        with NWBHDF5IO(path=self.filename, mode='a') as io:
+            io.write(nwbfile)
+
+        # Read the file from disk
+        with NWBHDF5IO(path=self.filename, mode='r') as io:
+            in_nwbfile = io.read()
+            in_lab_meta_data = in_nwbfile.get_lab_meta_data(lab_meta_data.name)
+            assert lab_meta_data.tissue_preparation == in_lab_meta_data.tissue_preparation
+
