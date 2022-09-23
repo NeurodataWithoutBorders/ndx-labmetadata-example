@@ -11,7 +11,6 @@ pip install .
 ## Usage
 
 ```python
-
 from pynwb.file import NWBFile, Subject
 from ndx_labmetadata_example import LabMetaDataExtensionExample
 from pynwb import NWBHDF5IO
@@ -37,11 +36,12 @@ lab_meta_data = LabMetaDataExtensionExample(tissue_preparation="Example tissue p
 nwbfile.add_lab_meta_data(lab_meta_data=lab_meta_data)
 
 # Write the file to disk
-with NWBHDF5IO(path=self.filename, mode='a') as io:
+filename = 'testfile.nwb'
+with NWBHDF5IO(path=filename, mode='a') as io:
     io.write(nwbfile)
 
 # Read the file from disk
-with NWBHDF5IO(path=self.filename, mode='r') as io:
+with NWBHDF5IO(path=filename, mode='r') as io:
     in_nwbfile = io.read()
     in_lab_meta_data = in_nwbfile.get_lab_meta_data(lab_meta_data.name)
     assert lab_meta_data.tissue_preparation == in_lab_meta_data.tissue_preparation
