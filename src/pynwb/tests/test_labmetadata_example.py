@@ -6,6 +6,7 @@ from ndx_labmetadata_example import LabMetaDataExtensionExample
 
 
 class TestLabMetaDataExtensionExample(TestCase):
+    """Test basic functionality of LabMetaDataExtensionExample without read/write"""
 
     def setUp(self):
         """Set up an NWB file. Necessary because TetrodeSeries requires references to electrodes."""
@@ -19,7 +20,17 @@ class TestLabMetaDataExtensionExample(TestCase):
 
 
 class TestLabMetaDataExtensionExampleRoundtrip(NWBH5IOMixin, TestCase):
-    """Roundtrip test for LabMetaDataExtensionExample pynwb.testing infrastructure."""
+    """
+    Roundtrip test for LabMetaDataExtensionExample to test read/write
+
+    This test class writes the LabMetaDataExtensionExample to an NWBFile, then
+    reads the data back from the file, and compares that the data read from file
+    is consistent with the original data. Using the pynwb.testing infrastructure
+    simplifies this complex test greatly by allowing to simply define how to
+    create the container, add to a file, and retrieve it form a file. The
+    task of writing, reading, and comparing the data is then taken care of
+    automatically by the NWBH5IOMixin.
+    """
 
     def setUpContainer(self):
         """set up example LabMetaDataExtensionExample object"""
