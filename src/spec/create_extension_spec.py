@@ -9,40 +9,38 @@ from pynwb.spec import NWBNamespaceBuilder, export_spec, NWBGroupSpec, NWBAttrib
 def main():
     # these arguments were auto-generated from your cookiecutter inputs
     ns_builder = NWBNamespaceBuilder(
-        doc="""Example extension to illustrate how to extend LabMetaData for adding lab-specific metadata""",
-        name="""ndx-labmetadata-example""",
+        doc="""Extension describing lab-sepcific metadata for MyBrainLab""",
+        name="""ndx-my-brainlab""",
         version="""0.1.0""",
-        author=list(map(str.strip, """Oliver Ruebel""".split(','))),
-        contact=list(map(str.strip, """oruebel@lbl.gov""".split(',')))
+        author=list(map(str.strip, """Peter Brain""".split(','))),
+        contact=list(map(str.strip, """peterbrain@brainlab.org""".split(',')))
     )
 
-    # TODO: specify the neurodata_types that are used by the extension as well
     # as in which namespace they are found.
     # this is similar to specifying the Python modules that need to be imported
     # to use your new data types.
     # all types included or used by the types specified here will also be
     # included.
-    ns_builder.include_type('ElectricalSeries', namespace='core')
+    ns_builder.include_type('LabMetaData', namespace='core')
 
-    # TODO: define your new data types
-    # see https://pynwb.readthedocs.io/en/latest/extensions.html#extending-nwb
-    # for more information
-    tetrode_series = NWBGroupSpec(
-        neurodata_type_def='TetrodeSeries',
-        neurodata_type_inc='ElectricalSeries',
-        doc=('An extension of ElectricalSeries to include the tetrode ID for '
-             'each time series.'),
-        attributes=[
-            NWBAttributeSpec(
-                name='trode_id',
-                doc='The tetrode ID.',
-                dtype='int32'
-            )
-        ],
+    # Define our LabMetaData type
+    labmetadata_ext = NWBGroupSpec(
+        name='MyBrainLabMetaData',
+        doc='type for storing lab metadata for MyBrainLab',
+        neurodata_type_def='MyBrainLabMetaData',
+        neurodata_type_inc='LabMetaData',
     )
 
-    # TODO: add all of your new data types to this list
-    new_data_types = [tetrode_series]
+    # Add custom metadata to our LabMetaData schema
+    labmetadata_ext.add_dataset(
+        name="tissue_preparation",
+        doc="Lab-specific description of the preparation of the tissue",
+        dtype='text',
+        quantity='?'
+    )
+
+    # add all of new data types to this list
+    new_data_types = [labmetadata_ext]
 
     # export the spec to yaml files in the spec folder
     output_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'spec'))
