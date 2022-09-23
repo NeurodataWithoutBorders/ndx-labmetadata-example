@@ -21,6 +21,5 @@ if not os.path.exists(ndx_labmetadata_example_specpath):
 # Load the namespace
 load_namespaces(ndx_labmetadata_example_specpath)
 
-# TODO: import your classes here or define your class using get_class to make
 # them accessible at the package level
-TetrodeSeries = get_class('TetrodeSeries', 'ndx-labmetadata-example')
+LabMetaDataExtensionExample = get_class('LabMetaDataExtensionExample', 'ndx-labmetadata-example')

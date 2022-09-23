@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 import os.path
 
-from pynwb.spec import NWBNamespaceBuilder, export_spec, NWBGroupSpec, NWBAttributeSpec
-# TODO: import other spec classes as needed
-# from pynwb.spec import NWBDatasetSpec, NWBLinkSpec, NWBDtypeSpec, NWBRefSpec
+from pynwb.spec import NWBNamespaceBuilder, export_spec, NWBGroupSpec
 
 
 def main():
     # these arguments were auto-generated from your cookiecutter inputs
     ns_builder = NWBNamespaceBuilder(
-        doc="""Extension describing lab-sepcific metadata for MyBrainLab""",
-        name="""ndx-my-brainlab""",
+        doc=""" Example extension to illustrate how to extend LabMetaData for adding lab-specific metadata""",
+        name="""ndx-labmetadata-example""",
         version="""0.1.0""",
-        author=list(map(str.strip, """Peter Brain""".split(','))),
-        contact=list(map(str.strip, """peterbrain@brainlab.org""".split(',')))
+        author=list(map(str.strip, """Oliver Ruebel""".split(','))),
+        contact=list(map(str.strip, """oruebel@lbl.gov""".split(',')))
     )
 
     # as in which namespace they are found.
@@ -25,9 +23,9 @@ def main():
 
     # Define our LabMetaData type
     labmetadata_ext = NWBGroupSpec(
-        name='MyBrainLabMetaData',
-        doc='type for storing lab metadata for MyBrainLab',
-        neurodata_type_def='MyBrainLabMetaData',
+        name='custom_lab_metadata',
+        doc='Example extension type for storing lab metadata',
+        neurodata_type_def='LabMetaDataExtensionExample',
         neurodata_type_inc='LabMetaData',
     )
 

@@ -1,8 +1,10 @@
 groups:
-- neurodata_type_def: TetrodeSeries
-  neurodata_type_inc: ElectricalSeries
-  doc: An extension of ElectricalSeries to include the tetrode ID for each time series.
-  attributes:
-  - name: trode_id
-    dtype: int32
-    doc: The tetrode ID.
+- neurodata_type_def: LabMetaDataExtensionExample
+  neurodata_type_inc: LabMetaData
+  name: custom_lab_metadata
+  doc: Example extension type for storing lab metadata
+  datasets:
+  - name: tissue_preparation
+    dtype: text
+    doc: Lab-specific description of the preparation of the tissue
+    quantity: '?'
