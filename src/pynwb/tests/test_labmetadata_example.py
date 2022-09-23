@@ -1,6 +1,6 @@
-from pynwb import NWBHDF5IO, NWBFile
 from pynwb.testing.mock.file import mock_NWBFile
 from pynwb.testing import TestCase
+from pynwb.testing.testh5io import NWBH5IOMixin
 
 from ndx_labmetadata_example import LabMetaDataExtensionExample
 
@@ -17,99 +17,19 @@ class TestLabMetaDataExtensionExample(TestCase):
         lmdee_object = LabMetaDataExtensionExample(tissue_preparation=tissue_preparation)
         self.assertEqual(lmdee_object.tissue_preparation, tissue_preparation)
 
-'''
 
-class TestTetrodeSeriesRoundtrip(TestCase):
-    """Simple roundtrip test for TetrodeSeries."""
-
-    def setUp(self):
-        self.nwbfile = set_up_nwbfile()
-        self.path = 'test.nwb'
-
-    def tearDown(self):
-        remove_test_file(self.path)
-
-    def test_roundtrip(self):
-        """
-        Add a TetrodeSeries to an NWBFile, write it to file, read the file, and test that the TetrodeSeries from the
-        file matches the original TetrodeSeries.
-        """
-        all_electrodes = self.nwbfile.create_electrode_table_region(
-            region=list(range(0, 10)),
-            description='all the electrodes'
-        )
-
-        data = np.random.rand(100, 3)
-        tetrode_series = TetrodeSeries(
-            name='TetrodeSeries',
-            description='description',
-            data=data,
-            rate=1000.,
-            electrodes=all_electrodes,
-            trode_id=1
-        )
-
-        self.nwbfile.add_acquisition(tetrode_series)
-
-        with NWBHDF5IO(self.path, mode='w') as io:
-            io.write(self.nwbfile)
-
-        with NWBHDF5IO(self.path, mode='r', load_namespaces=True) as io:
-            read_nwbfile = io.read()
-            self.assertContainerEqual(tetrode_series, read_nwbfile.acquisition['TetrodeSeries'])
-
-
-class TestTetrodeSeriesRoundtripPyNWB(AcquisitionH5IOMixin, TestCase):
-    """Complex, more complete roundtrip test for TetrodeSeries using pynwb.testing infrastructure."""
+class TestLabMetaDataExtensionExampleRoundtrip(NWBH5IOMixin, TestCase):
+    """Roundtrip test for LabMetaDataExtensionExample pynwb.testing infrastructure."""
 
     def setUpContainer(self):
-        """ Return the test TetrodeSeries to read/write """
-        self.device = Device(
-            name='device_name'
-        )
-
-        self.group = ElectrodeGroup(
-            name='electrode_group',
-            description='description',
-            location='location',
-            device=self.device
-        )
-
-        self.table = get_electrode_table()  # manually create a table of electrodes
-        for i in np.arange(10.):
-            self.table.add_row(
-                x=i,
-                y=i,
-                z=i,
-                imp=np.nan,
-                location='location',
-                filtering='filtering',
-                group=self.group,
-                group_name='electrode_group'
-            )
-
-        all_electrodes = DynamicTableRegion(
-            data=list(range(0, 10)),
-            description='all the electrodes',
-            name='electrodes',
-            table=self.table
-        )
-
-        data = np.random.rand(100, 3)
-        tetrode_series = TetrodeSeries(
-            name='name',
-            description='description',
-            data=data,
-            rate=1000.,
-            electrodes=all_electrodes,
-            trode_id=1
-        )
-        return tetrode_series
+        """set up example LabMetaDataExtensionExample object"""
+        self.lab_meta_data = LabMetaDataExtensionExample(tissue_preparation="Example tissue preparation")
+        return self.lab_meta_data
 
     def addContainer(self, nwbfile):
-        """Add the test TetrodeSeries and related objects to the given NWBFile."""
-        nwbfile.add_device(self.device)
-        nwbfile.add_electrode_group(self.group)
-        nwbfile.set_electrode_table(self.table)
-        nwbfile.add_acquisition(self.container)
-'''
+        """Add the test LabMetaDataExtensionExample to the given NWBFile."""
+        nwbfile.add_lab_meta_data(lab_meta_data=self.lab_meta_data)
+
+    def getContainer(self, nwbfile):
+        """Get the LabMetaDataExtensionExample object from the given NWBFile."""
+        return nwbfile.get_lab_meta_data(self.lab_meta_data.name)
