@@ -27,14 +27,14 @@ def main():
         doc='Example extension type for storing lab metadata',
         neurodata_type_def='LabMetaDataExtensionExample',
         neurodata_type_inc='LabMetaData',
-    )
-
-    # Add custom metadata to our LabMetaData schema
-    labmetadata_ext.add_dataset(
-        name="tissue_preparation",
-        doc="Lab-specific description of the preparation of the tissue",
-        dtype='text',
-        quantity='?'
+        datasets=[
+            NWBDatasetSpec(
+                name="tissue_preparation",
+                doc="Lab-specific description of the preparation of the tissue",
+                dtype='text',
+                quantity='?'
+            ),
+        ],
     )
 
     # add all of new data types to this list
